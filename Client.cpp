@@ -9,3 +9,7 @@
 #include "Client.hpp"
 using namespace std;
 
+int main(void) {
+    Client("linux10602.dc.engr.scu.edu", 47940);
+    return 0;
+}
