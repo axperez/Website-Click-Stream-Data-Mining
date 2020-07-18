@@ -18,7 +18,7 @@
 #include <sstream>
 
 // constants
-const unsigned int BUFF_SIZE = 512;
+const unsigned int BUFF_SIZE = 4096;
 
 // Class definitions
 class Client {
