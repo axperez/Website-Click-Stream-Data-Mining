@@ -7,6 +7,8 @@
 
 // include files
 #include <iostream>
+#include <thread>
+#include "Client.hpp"
 
 // constant declarations
 
