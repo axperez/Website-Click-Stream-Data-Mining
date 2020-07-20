@@ -66,11 +66,10 @@ void streamThread(string hostname_or_ip, int portno) {
     close(threadClient.sockfd);
 }
 
-int main(void) {
+void handleInput(vector<thread> &myThreads) {
     string line, host;
     int portno, suppThresh;
-    vector<thread> myThreads;
-
+    map<int, vector<vector<string>>> mfrs;
 
     while(getline(cin, line)) {
         stringstream ss(line);
@@ -97,16 +96,49 @@ int main(void) {
                 }
             }
             catch(...) {
-                cout << "Input Format Error: Please enter an integer > 0 as the support threshold or \"hostname_or_ip, port_number\"\n";
+                cout << "Input Format Error: Please enter an integer > 0 as the support threshold or a socket: \"hostname_or_ip, port_number\"\n";
                 continue;
             }
+            treeMutex.lock();
+            mfrs = globalFPTree.getMFRs(suppThresh);
+            treeMutex.unlock();
+            printMFRs(mfrs, suppThresh);
         }
     }
-    
+}
+
+void printMFRs(map<int, vector<vector<string>>> mfrs, int suppThresh) {
+    int count;
+
+    coutMutex.lock();
+
+    if (mfrs.size() == 0) {
+        cout << "No frequent path-traversal patterns with support threshold " << suppThresh << endl;
+    }
+
+    for (auto &length: mfrs) {
+        cout << "\nWith support " << suppThresh << ", the frequent path-traversal patterns with length " << length.first << " are:" << endl;
+        count = 1;
+        for (auto &path: length.second) {
+            cout << count << ")\t";
+            for (auto &url: path) {
+                cout << url << ", ";
+            }
+            cout << endl << endl;
+            count++;
+        }
+    }
+    coutMutex.unlock();
+}
+
+int main(void) {
+    vector<thread> myThreads;
+
+    handleInput(myThreads);
     exitThread = true;
     for (auto &thr: myThreads) {
         thr.join();
     }
-    
+
     return 0;
 }
