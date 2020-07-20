@@ -61,15 +61,52 @@ void streamThread(string hostname_or_ip, int portno) {
             }
         }
     }
-    while (bytesRecvd != 0);
+    while (bytesRecvd != 0 && !exitThread);
     
     close(threadClient.sockfd);
 }
 
 int main(void) {
-    thread th1(streamThread, "linux10617.dc.engr.scu.edu", 44282);
+    string line, host;
+    int portno, suppThresh;
+    vector<thread> myThreads;
 
-    th1.join();
 
+    while(getline(cin, line)) {
+        stringstream ss(line);
+
+        if (line.find(",") != string::npos) {
+            getline(ss, host, ',');
+            cout << host << ",";
+            getline(ss, line, ',');
+            cout << line << endl;
+            try {
+                portno = stoi(line);
+            }
+            catch(...) {
+                cout << "Input Format Error: Please enter integer as the port number in this format: \"hostname_or_ip, port_number\"\n";
+                continue;
+            }
+            myThreads.push_back(thread(streamThread, host, portno));
+        }
+        else {
+            try {
+                suppThresh = stoi(line);
+                if (suppThresh < 1) {
+                    throw -1;
+                }
+            }
+            catch(...) {
+                cout << "Input Format Error: Please enter an integer > 0 as the support threshold or \"hostname_or_ip, port_number\"\n";
+                continue;
+            }
+        }
+    }
+    
+    exitThread = true;
+    for (auto &thr: myThreads) {
+        thr.join();
+    }
+    
     return 0;
 }

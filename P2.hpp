@@ -11,6 +11,8 @@
 #include <mutex>
 #include <unordered_map>
 #include <unordered_set>
+#include <regex>
+#include <atomic>
 #include "Client.hpp"
 #include "StreamFPTree.hpp"
 
@@ -18,6 +20,7 @@
 
 //global declarations
 StreamFPTree globalFPTree;
+std::atomic<bool> exitThread(false);
 std::mutex treeMutex;
 std::mutex coutMutex;
 
