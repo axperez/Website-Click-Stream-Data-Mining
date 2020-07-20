@@ -2,7 +2,7 @@
 //      client.hpp
 // ------------------------------------------------------------
 // Author :     Axel Perez
-// Date :       7/12/20
+// Date :       7/19/20
 // ============================================================
 
 // include files
@@ -17,18 +17,20 @@
 #include <vector>
 #include <sstream>
 
-// constants
+// constant
 const unsigned int BUFF_SIZE = 4096;
 
-// Class definitions
+// Customized Client Class:
+//      Open socket to given hostname/ip and port, connect to socket, 
+//      receive data from server.
 class Client {
     public:
         int sockfd, portno;
         struct sockaddr_in server_address;
         struct hostent *server;
         std::string hostname, ip;
-        char buffer[BUFF_SIZE];
-        bool errorFlag = false;
+        char buffer[BUFF_SIZE];     // buffer to keep received message
+        bool errorFlag = false;     // public flag to notify error
 
         Client(std::string host_or_ip, int portnum);
         void connectToServer(void);

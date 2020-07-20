@@ -3,12 +3,14 @@
 // 
 // ---------------------------------------------------------
 // Author:      Axel Perez
-// Date:        7/12/20
+// Date:        7/19/20
 // =========================================================
 
 #include "Client.hpp"
 using namespace std;
 
+// Client Class Constructor:
+//      Creates socket, retrieves and saves host info.
 Client::Client(string host_or_ip, int portnum) {
     portno = portnum;
     hostname = host_or_ip;
@@ -31,12 +33,17 @@ Client::Client(string host_or_ip, int portnum) {
     ip = (char *)server->h_addr;
 }
 
+// Client Connect to Server Member Function:
+//      Attempts to connect to socket.
 void Client::connectToServer(void) {
     if(connect(sockfd, (const sockaddr*) &server_address, sizeof(server_address)) < 0) {
         error("Error connecting to " + hostname + " on port " + to_string(portno));
     }
 }
 
+// Client Receive from Server Member Function:
+//      Receive data from server into buffer and return 
+//      the number of bytes received.
 int Client::receiveFromServer(void) {
     int bytesRecvd;
 
@@ -49,6 +56,8 @@ int Client::receiveFromServer(void) {
     return bytesRecvd;
 }
 
+// Client Error Member Function:
+//      Closes socket, prints error message, and sets object's error flag.
 void Client::error(string msg) {
     close(sockfd);
     perror(msg.c_str());
