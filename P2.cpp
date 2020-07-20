@@ -12,9 +12,12 @@ using namespace std;
 void streamThread(string hostname_or_ip, int portno) {
     int bytesRecvd, tempUID;
     string temp, tempURL;
-    Client threadClient(hostname_or_ip, portno);
     unordered_map<int, vector<string>> userUrlPaths;
     unordered_map<int, unordered_set<string>> userUrls;
+    Client threadClient(hostname_or_ip, portno);
+    if (threadClient.errorFlag) {
+        return;
+    }
 
     threadClient.connectToServer();
     if (threadClient.errorFlag) {
@@ -76,9 +79,9 @@ void handleInput(vector<thread> &myThreads) {
 
         if (line.find(",") != string::npos) {
             getline(ss, host, ',');
-            cout << host << ",";
+            //cout << host << ",";
             getline(ss, line, ',');
-            cout << line << endl;
+            //cout << line << endl;
             try {
                 portno = stoi(line);
             }
